@@ -103,3 +103,15 @@ button:hover{
     position: absolute;
     top: 70%;
 }
+#play:hover{
+    background-color: rgb(57, 194, 73);
+    color: white;
+}
+#pause:hover{
+    background-color: rgb(228, 228, 66);
+    /* color: white; */
+}
+#reset:hover{
+    background-color: rgb(219, 73, 73);
+    color: white;
+}
