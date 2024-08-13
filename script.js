@@ -1,22 +1,31 @@
 let hour = document.querySelector('#hour');
 let min = document.querySelector('#min');
 let sec = document.querySelector('#sec');
+let milli = document.querySelector('#milli');
 let play = document.querySelector('#play');
 let pause = document.querySelector('#pause');
 let reset = document.querySelector('#reset');
-let border = document.querySelector('.container')
 let intervalId;
 
-let saveStateSec = 1;
-let saveStateMin = 0;
-let saveStateHour = 0;
-
-let secTime = saveStateSec;
-let minTime = saveStateMin;
-let hourTime = saveStateHour;
+let secTime = 0;
+let minTime = 0;
+let hourTime = 0;
+let milliTime = 0;
 
 function time(){
+    
     intervalId = setInterval(()=>{
+        milliTime++;
+        if(milliTime <= 9){
+            milli.textContent = `0${milliTime}`;
+        }else{
+            if(milliTime===100){
+                milliTime.textContent = 99 // to avoid jitter => 100 hoga to extra space a ri to elemnt shift ho re the
+            }else{
+                milli.textContent = milliTime;
+            }
+            
+        }
         if(secTime <= 9){
             sec.textContent = `0${secTime}`;
         }else{
@@ -35,32 +44,34 @@ function time(){
             hour.textContent = hourTime;
         }
         
-        secTime++;
-        if(secTime==61){
-            secTime = 0;
+        if(milliTime==100){
+            secTime++;
+            milliTime = 0;
+        }
+        if(secTime == 61){
             minTime++;
+            milliTime=0;
+            secTime=0;
         }
         if(minTime == 61){
             minTime = 0;
             secTime = 0;
+            milliTime = 0;
             hourTime++;
         }
-    },1000)
+    },10)
 }
 
 play.addEventListener('click',()=>{
     play.disabled = true;
     pause.disabled = false;
    time();
-    
+
 });
 
 pause.addEventListener('click', ()=>{
     pause.disabled = true;
     clearInterval(intervalId);
-    saveStateHour = hour.textContent;
-    saveStateMin = min.textContent;
-    saveStateSec = sec.textContent;
     play.disabled = false;
 });
 
@@ -69,13 +80,12 @@ reset.addEventListener('click', ()=>{
     play.disabled = false;
     pause.disabled = false;                                                             
     clearInterval(intervalId);
-    saveStateHour =1;
-    saveStateMin =0;
-    saveStateSec =0;
-    secTime = 1;
+    secTime = 0;
     minTime = 0;
-    hourTime = 0
+    hourTime = 0;
+    milliTime = 0;
     sec.innerHTML = '00';
     min.innerHTML = '00';
     hour.innerHTML = '00';
+    milli.innerHTML = "00"
 })
